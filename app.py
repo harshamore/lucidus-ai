@@ -577,7 +577,7 @@ def get_sdg_names(sdg_ids):
 def get_ai_career_matches():
                     # Create the client
     #client = OpenAI(api_key=st.session_state.openai_api_key)
-     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
     
     # Format interests, skills, and SDGs
     interests_str = ", ".join(st.session_state.selected_interests)
