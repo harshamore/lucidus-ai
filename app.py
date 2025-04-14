@@ -960,6 +960,8 @@ elif st.session_state.step == 4:
                 top_match = st.session_state.career_matches[0]
                 
                 st.markdown("## 🏆 Top Career Match")
+                
+                # Create the main card first with just the basic info
                 st.markdown(f"""
                 <div class="career-card top-match">
                     <div class="career-header">
@@ -968,33 +970,40 @@ elif st.session_state.step == 4:
                     <div class="career-content">
                         <p>{top_match['description']}</p>
                         <p><strong>Why this fits you:</strong> {top_match['explanation']}</p>
-                        
-                        <div style="margin-top: 1rem;">
-                            <strong style="color: #1565c0;">Matching Interests:</strong><br>
-                            <div style="margin: 0.5rem 0;">
-                                {"".join([f'<span class="tag interest-tag">{interest}</span>' for interest in top_match['matching_interests']])}
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 1rem;">
-                            <strong style="color: #2e7d32;">Matching Skills:</strong><br>
-                            <div style="margin: 0.5rem 0;">
-                                <strong style="font-size: 0.8rem;">Current:</strong> {"".join([f'<span class="tag skill-tag">{skill}</span>' for skill in top_match['matching_skills']['current']])}
-                            </div>
-                            <div style="margin: 0.5rem 0;">
-                                <strong style="font-size: 0.8rem;">To Develop:</strong> {"".join([f'<span class="tag skill-tag">{skill}</span>' for skill in top_match['matching_skills']['desired']])}
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 1rem;">
-                            <strong style="color: #5e35b1;">Matching SDGs:</strong><br>
-                            <div style="margin: 0.5rem 0;">
-                                {"".join([f'<span class="tag sdg-tag">{sdg}</span>' for sdg in top_match['matching_sdgs']])}
-                            </div>
-                        </div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
+                
+                # Display matching interests separately
+                st.markdown("<strong style='color: #1565c0;'>Matching Interests:</strong>", unsafe_allow_html=True)
+                interests_html = ""
+                for interest in top_match['matching_interests']:
+                    interests_html += f'<span style="background-color: #e1f5fe; color: #0277bd; border-radius: 1rem; padding: 0.2rem 0.6rem; margin-right: 0.3rem; margin-bottom: 0.3rem; display: inline-block; font-size: 0.8rem;">{interest}</span>'
+                st.markdown(f"<div>{interests_html}</div>", unsafe_allow_html=True)
+                
+                # Display matching skills separately
+                st.markdown("<strong style='color: #2e7d32;'>Matching Skills:</strong>", unsafe_allow_html=True)
+                
+                # Current skills
+                st.markdown("<strong style='font-size: 0.8rem;'>Current:</strong>", unsafe_allow_html=True)
+                current_skills_html = ""
+                for skill in top_match['matching_skills']['current']:
+                    current_skills_html += f'<span style="background-color: #e8f5e9; color: #2e7d32; border-radius: 1rem; padding: 0.2rem 0.6rem; margin-right: 0.3rem; margin-bottom: 0.3rem; display: inline-block; font-size: 0.8rem;">{skill}</span>'
+                st.markdown(f"<div>{current_skills_html}</div>", unsafe_allow_html=True)
+                
+                # Skills to develop
+                st.markdown("<strong style='font-size: 0.8rem;'>To Develop:</strong>", unsafe_allow_html=True)
+                desired_skills_html = ""
+                for skill in top_match['matching_skills']['desired']:
+                    desired_skills_html += f'<span style="background-color: #e8f5e9; color: #2e7d32; border-radius: 1rem; padding: 0.2rem 0.6rem; margin-right: 0.3rem; margin-bottom: 0.3rem; display: inline-block; font-size: 0.8rem;">{skill}</span>'
+                st.markdown(f"<div>{desired_skills_html}</div>", unsafe_allow_html=True)
+                
+                # Display matching SDGs separately
+                st.markdown("<strong style='color: #5e35b1;'>Matching SDGs:</strong>", unsafe_allow_html=True)
+                sdgs_html = ""
+                for sdg in top_match['matching_sdgs']:
+                    sdgs_html += f'<span style="background-color: #ede7f6; color: #5e35b1; border-radius: 1rem; padding: 0.2rem 0.6rem; margin-right: 0.3rem; margin-bottom: 0.3rem; display: inline-block; font-size: 0.8rem;">{sdg}</span>'
+                st.markdown(f"<div>{sdgs_html}</div>", unsafe_allow_html=True)
                 
                 # Other matches
                 st.markdown("## Other Recommended Careers")
