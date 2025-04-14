@@ -589,7 +589,7 @@ Ensure each career has a different match_score and sort by match_score in descen
     # Get completion from OpenAI
     try:
         completion = client.chat.completions.create(
-            model="gpt-4-turbo",  # You can use gpt-3.5-turbo for a cheaper but less powerful option
+            model="gpt-4o-mini",  # You can use gpt-3.5-turbo for a cheaper but less powerful option
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": system_prompt},
