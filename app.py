@@ -6,7 +6,12 @@ import openai
 from openai import OpenAI
 
 # Load OpenAI API key from secrets
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+openai_api_key = st.secrets["OPENAI_API_KEY"]
+
+# Check for OpenAI API key in Streamlit secrets
+if "OPENAI_API_KEY" not in st.secrets:
+    st.error("Please set the OPENAI_API_KEY in your Streamlit secrets!")
+    st.stop()
 
 # Set page configuration
 st.set_page_config(
@@ -521,14 +526,14 @@ if 'career_matches' not in st.session_state:
     st.session_state.career_matches = []
 
 # Load OpenAI API key from secrets
-try:
-    openai_api_key = st.secrets["OPENAI_API_KEY"]
+#try:
+    #openai_api_key = st.secrets["OPENAI_API_KEY"]
     # Make it globally available
-    has_api_key = True
-except Exception as e:
-    openai_api_key = None
-    has_api_key = False
-    st.error(f"OpenAI API key not found in secrets. Please add it to your Streamlit secrets.toml file. Error: {e}")
+    #has_api_key = True
+#except Exception as e:
+    #openai_api_key = None
+    #has_api_key = False
+    #st.error(f"OpenAI API key not found in secrets. Please add it to your Streamlit secrets.toml file. Error: {e}")
 
 # Load data
 careers = load_career_data()
@@ -571,7 +576,8 @@ def get_sdg_names(sdg_ids):
 # OpenAI API call to match careers
 def get_ai_career_matches():
                     # Create the client
-    client = OpenAI(api_key=st.session_state.openai_api_key)
+    #client = OpenAI(api_key=st.session_state.openai_api_key)
+     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
     
     # Format interests, skills, and SDGs
     interests_str = ", ".join(st.session_state.selected_interests)
