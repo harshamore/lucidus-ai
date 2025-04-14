@@ -520,10 +520,12 @@ if 'career_matches' not in st.session_state:
 # Load OpenAI API key from secrets
 try:
     openai_api_key = st.secrets['openai']["OPENAI_API_KEY"]
+    # Make it globally available
     has_api_key = True
-except Exception:
+except Exception as e:
+    openai_api_key = None
     has_api_key = False
-    st.error("OpenAI API key not found in secrets. Please add it to your Streamlit secrets.toml file.")
+    st.error(f"OpenAI API key not found in secrets. Please add it to your Streamlit secrets.toml file. Error: {e}")
 
 # Load data
 careers = load_career_data()
