@@ -519,7 +519,7 @@ if 'career_matches' not in st.session_state:
 
 # Load OpenAI API key from secrets
 try:
-    openai_api_key = st.secrets["OPENAI_API_KEY"]
+    openai_api_key = st.secrets['openai']["OPENAI_API_KEY"]
     has_api_key = True
 except Exception:
     has_api_key = False
