@@ -559,14 +559,14 @@ def get_sdg_names(sdg_ids):
 
 # OpenAI API call to match careers
 def get_ai_career_matches():
-    # Create the client
+                    # Create the client
     client = OpenAI(api_key=st.session_state.openai_api_key)
     
     # Format interests, skills, and SDGs
     interests_str = ", ".join(st.session_state.selected_interests)
     current_skills_str = ", ".join(st.session_state.current_skills)
     desired_skills_str = ", ".join(st.session_state.desired_skills)
-    sdgs_str = ", ".join([f"{sdg_id}: {[s['name'] for s in sdgs if s['id'] == sdg_id][0]}" for sdg_id in st.session_state.selected_sdgs])
+    sdgs_str = ", ".join([f"SDG {sdg_id}: {[s['name'] for s in sdgs if s['id'] == sdg_id][0]}" for sdg_id in st.session_state.selected_sdgs])
     
     # Construct the career data
     career_data = []
@@ -575,7 +575,7 @@ def get_ai_career_matches():
             "id": career["id"],
             "title": career["title"],
             "description": career["description"],
-            "sdgs": [f"{sdg_id}: {[s['name'] for s in sdgs if s['id'] == sdg_id][0]}" for sdg_id in career["sdgs"]]
+            "sdgs": [f"SDG {sdg_id}: {[s['name'] for s in sdgs if s['id'] == sdg_id][0]}" for sdg_id in career["sdgs"]]
         }
         career_data.append(career_info)
     
@@ -1002,7 +1002,16 @@ elif st.session_state.step == 4:
                 st.markdown("<strong style='color: #5e35b1;'>Matching SDGs:</strong>", unsafe_allow_html=True)
                 sdgs_html = ""
                 for sdg in top_match['matching_sdgs']:
-                    sdgs_html += f'<span style="background-color: #ede7f6; color: #5e35b1; border-radius: 1rem; padding: 0.2rem 0.6rem; margin-right: 0.3rem; margin-bottom: 0.3rem; display: inline-block; font-size: 0.8rem;">{sdg}</span>'
+                    # Extract just the SDG number and format properly
+                    if ":" in sdg:
+                        sdg_parts = sdg.split(":")
+                        sdg_display = sdg_parts[0].strip()
+                        sdg_name = sdg_parts[1].strip() if len(sdg_parts) > 1 else ""
+                        sdg_text = f"{sdg_display}: {sdg_name}"
+                    else:
+                        sdg_text = sdg
+                        
+                    sdgs_html += f'<span style="background-color: #ede7f6; color: #5e35b1; border-radius: 1rem; padding: 0.2rem 0.6rem; margin-right: 0.3rem; margin-bottom: 0.3rem; display: inline-block; font-size: 0.8rem;">{sdg_text}</span>'
                 st.markdown(f"<div>{sdgs_html}</div>", unsafe_allow_html=True)
                 
                 # Other matches
@@ -1017,31 +1026,41 @@ elif st.session_state.step == 4:
                         if i + j < len(other_matches):
                             career = other_matches[i + j]
                             with cols[j]:
+                                # Display title and description with match score
                                 st.markdown(f"""
-                                <div class="career-card">
-                                    <div class="career-header">
-                                        <h4 style="margin: 0;">{career['title']} <span style="float:right; font-size:0.8rem;">Match: {career['match_score']}%</span></h4>
+                                <div style="border: 1px solid #ddd; border-radius: 0.5rem; margin-bottom: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                    <div style="background-color: #1976d2; color: white; padding: 0.7rem; border-radius: 0.5rem 0.5rem 0 0;">
+                                        <h4 style="margin: 0; font-size: 1.1rem;">{career['title']} <span style="float:right; font-size:0.8rem;">Match: {career['match_score']}%</span></h4>
                                     </div>
-                                    <div class="career-content">
-                                        <p>{career['description']}</p>
+                                    <div style="padding: 0.7rem;">
+                                        <p style="font-size: 0.9rem;">{career['description']}</p>
                                         <p style="font-size: 0.9rem;"><strong>Why this fits you:</strong> {career['explanation']}</p>
-                                        
-                                        <div style="margin-top: 0.5rem;">
-                                            <strong style="color: #1565c0; font-size: 0.8rem;">Matching Interests:</strong>
-                                            <div style="margin: 0.3rem 0;">
-                                                {"".join([f'<span class="tag interest-tag">{interest}</span>' for interest in career['matching_interests']])}
-                                            </div>
-                                        </div>
-                                        
-                                        <div style="margin-top: 0.5rem;">
-                                            <strong style="color: #2e7d32; font-size: 0.8rem;">Matching SDGs:</strong>
-                                            <div style="margin: 0.3rem 0;">
-                                                {"".join([f'<span class="tag sdg-tag">{sdg.split(":")[0]}</span>' for sdg in career['matching_sdgs'][:2]])}
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 """, unsafe_allow_html=True)
+                                
+                                # Display interests
+                                st.markdown("<strong style='color: #1565c0; font-size: 0.8rem;'>Matching Interests:</strong>", unsafe_allow_html=True)
+                                interests_html = ""
+                                for interest in career['matching_interests']:
+                                    interests_html += f'<span style="background-color: #e1f5fe; color: #0277bd; border-radius: 1rem; padding: 0.2rem 0.6rem; margin-right: 0.3rem; margin-bottom: 0.3rem; display: inline-block; font-size: 0.8rem;">{interest}</span>'
+                                st.markdown(f"<div>{interests_html}</div>", unsafe_allow_html=True)
+                                
+                                # Display SDGs
+                                st.markdown("<strong style='color: #5e35b1; font-size: 0.8rem;'>Matching SDGs:</strong>", unsafe_allow_html=True)
+                                sdgs_html = ""
+                                for sdg in career['matching_sdgs'][:2]:
+                                    # Extract just the SDG number and format properly
+                                    if ":" in sdg:
+                                        sdg_parts = sdg.split(":")
+                                        sdg_display = sdg_parts[0].strip()
+                                        sdg_name = sdg_parts[1].strip() if len(sdg_parts) > 1 else ""
+                                        sdg_text = f"{sdg_display}: {sdg_name}"
+                                    else:
+                                        sdg_text = sdg
+                                        
+                                    sdgs_html += f'<span style="background-color: #ede7f6; color: #5e35b1; border-radius: 1rem; padding: 0.2rem 0.6rem; margin-right: 0.3rem; margin-bottom: 0.3rem; display: inline-block; font-size: 0.8rem;">{sdg_text}</span>'
+                                st.markdown(f"<div>{sdgs_html}</div>", unsafe_allow_html=True)
             else:
                 st.error("No career matches were found. Please try again with different selections.")
             
