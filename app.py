@@ -5,6 +5,9 @@ import json
 import openai
 from openai import OpenAI
 
+# Load OpenAI API key from secrets
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
 # Set page configuration
 st.set_page_config(
     page_title="AI Career Discovery",
