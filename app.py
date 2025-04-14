@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import json
-import time
 import openai
 from openai import OpenAI
-import json
 
-# Page configuration
+# Set page configuration
 st.set_page_config(
     page_title="AI Career Discovery",
     page_icon="🧭",
@@ -14,13 +13,12 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Add custom CSS for styling
+# Add custom CSS for styling - with direct CSS for tag elements and blue selection color
 st.markdown("""
 <style>
     .main {
         padding: 1rem;
     }
-    
     .step-header {
         padding: 1rem;
         border-radius: 0.5rem;
@@ -38,6 +36,50 @@ st.markdown("""
     .stButton button[data-baseweb="button"][kind="primary"]:hover {
         background-color: #1565c0 !important;
         border-color: #1565c0 !important;
+    }
+    
+    /* Define styles directly for spans instead of using classes */
+    span.tag {
+        background-color: #f1f1f1;
+        border-radius: 1rem;
+        padding: 0.2rem 0.6rem;
+        margin-right: 0.3rem;
+        margin-bottom: 0.3rem;
+        display: inline-block;
+        font-size: 0.8rem;
+    }
+    
+    span.interest-tag {
+        background-color: #e1f5fe;
+        color: #0277bd;
+        border-radius: 1rem;
+        padding: 0.2rem 0.6rem;
+        margin-right: 0.3rem;
+        margin-bottom: 0.3rem;
+        display: inline-block;
+        font-size: 0.8rem;
+    }
+    
+    span.skill-tag {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        border-radius: 1rem;
+        padding: 0.2rem 0.6rem;
+        margin-right: 0.3rem;
+        margin-bottom: 0.3rem;
+        display: inline-block;
+        font-size: 0.8rem;
+    }
+    
+    span.sdg-tag {
+        background-color: #ede7f6;
+        color: #5e35b1;
+        border-radius: 1rem;
+        padding: 0.2rem 0.6rem;
+        margin-right: 0.3rem;
+        margin-bottom: 0.3rem;
+        display: inline-block;
+        font-size: 0.8rem;
     }
     
     .career-card {
@@ -62,31 +104,6 @@ st.markdown("""
     
     .career-content {
         padding: 1rem;
-    }
-    
-    .tag {
-        background-color: #f1f1f1;
-        border-radius: 1rem;
-        padding: 0.2rem 0.6rem;
-        margin-right: 0.3rem;
-        margin-bottom: 0.3rem;
-        display: inline-block;
-        font-size: 0.8rem;
-    }
-    
-    .interest-tag {
-        background-color: #e1f5fe;
-        color: #0277bd;
-    }
-    
-    .skill-tag {
-        background-color: #e8f5e9;
-        color: #2e7d32;
-    }
-    
-    .sdg-tag {
-        background-color: #ede7f6;
-        color: #5e35b1;
     }
     
     .step-container {
@@ -129,7 +146,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Career data for reference
+# Career data with mappings to interests, skills, and SDGs
 @st.cache_data
 def load_career_data():
     careers = [
@@ -137,168 +154,224 @@ def load_career_data():
             "id": 1,
             "title": "Microfinance Specialist",
             "description": "Designs small loans and savings programs to support underserved communities.",
+            "interests": ["Economics", "Business Studies / Entrepreneurship", "Global Politics / Civics"],
+            "skills": ["Strategic thinking", "Data analysis", "Helping people", "Understanding cultures"],
             "sdgs": [1, 8, 10]  # No Poverty, Decent Work & Economic Growth, Reduced Inequalities
         },
         {
             "id": 2,
             "title": "Agroecologist",
             "description": "Applies ecological science to farming for healthier food systems and better soil.",
+            "interests": ["Biology", "Environmental Systems & Societies / Environmental Science", "Agriculture / Sustainable Farming"],
+            "skills": ["Working outdoors", "Problem solving", "Supporting the planet", "Working with animals"],
             "sdgs": [2, 13, 15]  # Zero Hunger, Climate Action, Life on Land
         },
         {
             "id": 3,
             "title": "Biomedical Engineer",
             "description": "Develops medical devices like prosthetics, diagnostic tools, and wearable tech.",
+            "interests": ["Biology", "Physics", "Engineering (General or Applied)", "Design & Technology / Engineering"],
+            "skills": ["Problem solving", "Building or fixing", "Using tools/machines", "Helping people"],
             "sdgs": [3, 9, 10]  # Good Health & Well-Being, Industry/Innovation/Infrastructure, Reduced Inequalities
         },
         {
             "id": 4,
             "title": "Digital Learning Developer",
             "description": "Creates educational games, apps, and platforms for digital learning.",
+            "interests": ["Computer Science / Programming", "Education", "Design & Technology / Engineering"],
+            "skills": ["Coding", "Designing digitally", "Writing or storytelling", "Explaining ideas"],
             "sdgs": [4, 9, 10]  # Quality Education, Industry/Innovation/Infrastructure, Reduced Inequalities
         },
         {
             "id": 5,
             "title": "Hydrologist",
             "description": "Studies the water cycle and helps improve clean water access and conservation.",
+            "interests": ["Environmental Systems & Societies / Environmental Science", "Geography", "Chemistry"],
+            "skills": ["Data analysis", "Working outdoors", "Supporting the planet", "Problem solving"],
             "sdgs": [6, 13, 14]  # Clean Water & Sanitation, Climate Action, Life Below Water
         },
         {
             "id": 6,
             "title": "Wind Turbine Technician",
             "description": "Installs and maintains turbines that convert wind into clean electricity.",
+            "interests": ["Physics", "Engineering (General or Applied)", "Environmental Systems & Societies / Environmental Science"],
+            "skills": ["Building or fixing", "Working outdoors", "Using tools/machines", "Supporting the planet"],
             "sdgs": [7, 8, 13]  # Affordable & Clean Energy, Decent Work & Economic Growth, Climate Action
         },
         {
             "id": 7,
             "title": "Waste Management Engineer",
             "description": "Designs systems for composting, recycling, and waste reduction.",
+            "interests": ["Environmental Systems & Societies / Environmental Science", "Chemistry", "Engineering (General or Applied)"],
+            "skills": ["Problem solving", "Strategic thinking", "Supporting the planet", "Building or fixing"],
             "sdgs": [11, 12, 13]  # Sustainable Cities, Responsible Consumption & Production, Climate Action
         },
         {
             "id": 8,
             "title": "Circular Economy Analyst",
             "description": "Redesigns how companies produce and reuse materials to reduce waste.",
+            "interests": ["Business Studies / Entrepreneurship", "Environmental Systems & Societies / Environmental Science", "Economics"],
+            "skills": ["Strategic thinking", "Data analysis", "Supporting the planet", "Standing up for causes"],
             "sdgs": [9, 12, 13]  # Industry/Innovation, Responsible Consumption & Production, Climate Action
         },
         {
             "id": 9,
             "title": "Sustainable Fashion Designer",
             "description": "Creates trendy clothing using ethical and eco-friendly materials.",
+            "interests": ["Visual Arts (drawing, painting, sculpture)", "Graphic Design / Digital Media", "Product Design / Industrial Design"],
+            "skills": ["Creative thinking", "Drawing or painting", "Supporting the planet", "Designing digitally"],
             "sdgs": [12, 13, 8]  # Responsible Consumption, Climate Action, Decent Work & Economic Growth
         },
         {
             "id": 10,
             "title": "Atmospheric Scientist",
             "description": "Studies weather and climate systems to understand and model change.",
+            "interests": ["Physics", "Geography", "Environmental Systems & Societies / Environmental Science"],
+            "skills": ["Data analysis", "Strategic thinking", "Supporting the planet", "Problem solving"],
             "sdgs": [13, 11, 17]  # Climate Action, Sustainable Cities, Partnerships for Goals
         },
         {
             "id": 11,
             "title": "Carbon Accounting Analyst",
             "description": "Tracks emissions and helps companies reduce their carbon footprint.",
+            "interests": ["Economics", "Environmental Systems & Societies / Environmental Science", "Business Studies / Entrepreneurship"],
+            "skills": ["Data analysis", "Strategic thinking", "Supporting the planet", "Decision-making"],
             "sdgs": [12, 13, 9]  # Responsible Consumption, Climate Action, Industry/Innovation
         },
         {
             "id": 12,
             "title": "Marine Biologist",
             "description": "Studies ocean ecosystems and works to protect marine biodiversity.",
+            "interests": ["Biology", "Environmental Systems & Societies / Environmental Science", "Geography"],
+            "skills": ["Working outdoors", "Data analysis", "Supporting the planet", "Working with animals"],
             "sdgs": [14, 13, 15]  # Life Below Water, Climate Action, Life on Land
         },
         {
             "id": 13,
             "title": "Urban City Planner",
             "description": "Designs greener, more connected cities using sustainable planning.",
+            "interests": ["Geography", "Architecture / Interior Design", "Environmental Systems & Societies / Environmental Science"],
+            "skills": ["Strategic thinking", "Designing digitally", "Problem solving", "Supporting the planet"],
             "sdgs": [11, 9, 13]  # Sustainable Cities, Industry/Innovation, Climate Action
         },
         {
             "id": 14,
             "title": "Resilience Engineer",
             "description": "Builds infrastructure that can withstand floods, heatwaves, and climate shocks.",
+            "interests": ["Engineering (General or Applied)", "Physics", "Environmental Systems & Societies / Environmental Science"],
+            "skills": ["Problem solving", "Strategic thinking", "Building or fixing", "Decision-making"],
             "sdgs": [9, 11, 13]  # Industry/Innovation, Sustainable Cities, Climate Action
         },
         {
             "id": 15,
             "title": "Disaster Relief Coordinator",
             "description": "Coordinates emergency response during disasters, from logistics to shelter.",
+            "interests": ["Global Politics / Civics", "Geography", "Business Studies / Entrepreneurship"],
+            "skills": ["Leading others", "Decision-making", "Helping people", "Resolving conflict"],
             "sdgs": [3, 11, 16]  # Good Health & Well-Being, Sustainable Cities, Peace & Justice
         },
         {
             "id": 16,
             "title": "Environmental Data Scientist",
             "description": "Uses data to predict and respond to environmental and climate issues.",
+            "interests": ["Computer Science / Programming", "Mathematics", "Environmental Systems & Societies / Environmental Science"],
+            "skills": ["Coding", "Data analysis", "Strategic thinking", "Supporting the planet"],
             "sdgs": [13, 14, 15]  # Climate Action, Life Below Water, Life on Land
         },
         {
             "id": 17,
             "title": "Food Systems Analyst",
             "description": "Analyzes global food supply chains and suggests improvements for sustainability.",
+            "interests": ["Agriculture / Sustainable Farming", "Business Studies / Entrepreneurship", "Geography"],
+            "skills": ["Data analysis", "Strategic thinking", "Supporting the planet", "Standing up for causes"],
             "sdgs": [2, 12, 13]  # Zero Hunger, Responsible Consumption, Climate Action
         },
         {
             "id": 18,
             "title": "Space Systems Engineer",
             "description": "Designs satellites and space tech used in communication and climate monitoring.",
+            "interests": ["Physics", "Engineering (General or Applied)", "Mathematics"],
+            "skills": ["Problem solving", "Strategic thinking", "Building or fixing", "Decision-making"],
             "sdgs": [9, 13, 17]  # Industry/Innovation, Climate Action, Partnerships for Goals
         },
         {
             "id": 19,
             "title": "AI Engineer",
             "description": "Develops intelligent systems that power apps, automation, and innovation.",
+            "interests": ["Computer Science / Programming", "Mathematics", "Philosophy"],
+            "skills": ["Coding", "Problem solving", "Strategic thinking", "Data analysis"],
             "sdgs": [9, 8, 4]  # Industry/Innovation, Decent Work, Quality Education
         },
         {
             "id": 20,
             "title": "Doctor",
             "description": "Diagnoses and treats patients, supporting health and well-being.",
+            "interests": ["Biology", "Chemistry", "Health Science / Pre-Med"],
+            "skills": ["Decision-making", "Helping people", "Listening well", "Problem solving"],
             "sdgs": [3, 5, 10]  # Good Health & Well-Being, Gender Equality, Reduced Inequalities
         },
         {
             "id": 21,
             "title": "Product Manager",
             "description": "Leads product teams from idea to launch across industries.",
+            "interests": ["Business Studies / Entrepreneurship", "Psychology", "Design & Technology / Engineering"],
+            "skills": ["Leading others", "Strategic thinking", "Decision-making", "Explaining ideas"],
             "sdgs": [8, 9, 12]  # Decent Work, Industry/Innovation, Responsible Consumption
         },
         {
             "id": 22,
             "title": "Graphic Designer",
             "description": "Creates visual content like logos, posters, and digital assets.",
+            "interests": ["Visual Arts (drawing, painting, sculpture)", "Graphic Design / Digital Media", "Design & Technology / Engineering"],
+            "skills": ["Creative thinking", "Drawing or painting", "Designing digitally", "Explaining ideas"],
             "sdgs": [8, 9, 12]  # Decent Work, Industry/Innovation, Responsible Consumption
         },
         {
             "id": 23,
             "title": "Journalist",
             "description": "Reports and writes news stories for TV, social media, or publications.",
+            "interests": ["English Literature / Language Arts", "Global Politics / Civics", "Psychology"],
+            "skills": ["Writing or storytelling", "Listening well", "Explaining ideas", "Standing up for causes"],
             "sdgs": [16, 10, 17]  # Peace & Justice, Reduced Inequalities, Partnerships for Goals
         },
         {
             "id": 24,
             "title": "Investment Banker",
             "description": "Advises companies on financial deals, growth, and capital strategies.",
+            "interests": ["Economics", "Business Studies / Entrepreneurship", "Mathematics"],
+            "skills": ["Strategic thinking", "Data analysis", "Decision-making", "Explaining ideas"],
             "sdgs": [8, 9, 17]  # Decent Work, Industry/Innovation, Partnerships for Goals
         },
         {
             "id": 25,
             "title": "Game Designer",
             "description": "Builds interactive games for entertainment and education.",
+            "interests": ["Computer Science / Programming", "Visual Arts (drawing, painting, sculpture)", "Psychology"],
+            "skills": ["Creative thinking", "Coding", "Designing digitally", "Writing or storytelling"],
             "sdgs": [4, 8, 9]  # Quality Education, Decent Work, Industry/Innovation
         },
         {
             "id": 26,
             "title": "Biotech Researcher",
             "description": "Develops breakthroughs like vaccines, clean meat, or gene therapy.",
+            "interests": ["Biology", "Chemistry", "Health Science / Pre-Med"],
+            "skills": ["Problem solving", "Data analysis", "Supporting the planet", "Helping people"],
             "sdgs": [3, 2, 9]  # Good Health, Zero Hunger, Industry/Innovation
         },
         {
             "id": 27,
             "title": "Neuroscientist",
             "description": "Studies the human brain to understand memory, emotions, and health.",
+            "interests": ["Biology", "Psychology", "Health Science / Pre-Med"],
+            "skills": ["Data analysis", "Problem solving", "Helping people", "Decision-making"],
             "sdgs": [3, 9, 10]  # Good Health, Industry/Innovation, Reduced Inequalities
         },
         {
             "id": 28,
             "title": "UX Designer",
             "description": "Designs interfaces that make tech easy, ethical, and human-centered.",
+            "interests": ["Psychology", "Graphic Design / Digital Media", "Computer Science / Programming"],
+            "skills": ["Creative thinking", "Designing digitally", "Listening well", "Problem solving"],
             "sdgs": [9, 10, 4]  # Industry/Innovation, Reduced Inequalities, Quality Education
         }
     ]
@@ -488,29 +561,7 @@ def handle_sdg_select(sdg_id):
 def get_sdg_names(sdg_ids):
     return [sdg["name"] for sdg in sdgs if sdg["id"] in sdg_ids]
 
-def go_to_next_step():
-    if st.session_state.step == 1 and len(st.session_state.selected_interests) == 3:
-        st.session_state.step = 2
-    elif st.session_state.step == 2 and len(st.session_state.current_skills) == 3 and len(st.session_state.desired_skills) == 3:
-        st.session_state.step = 3
-    elif st.session_state.step == 3 and len(st.session_state.selected_sdgs) > 0:
-        # In this version, we'll call the AI matching function
-        st.session_state.step = 4
-        if st.session_state.api_key_set:
-            with st.spinner("AI is analyzing your profile and finding the best career matches..."):
-                st.session_state.career_matches = get_ai_career_matches()
-        else:
-            st.error("Please enter your OpenAI API key in the sidebar to see AI-powered career matches.")
-
-def restart():
-    st.session_state.step = 1
-    st.session_state.selected_interests = []
-    st.session_state.current_skills = []
-    st.session_state.desired_skills = []
-    st.session_state.selected_sdgs = []
-    st.session_state.career_matches = []
-
-# OpenAI matching function
+# OpenAI API call to match careers
 def get_ai_career_matches():
     # Create the client
     client = OpenAI(api_key=st.session_state.openai_api_key)
@@ -589,7 +640,7 @@ Ensure each career has a different match_score and sort by match_score in descen
     # Get completion from OpenAI
     try:
         completion = client.chat.completions.create(
-            model="gpt-4o-mini",  # You can use gpt-3.5-turbo for a cheaper but less powerful option
+            model="gpt-4-turbo",  # You can use gpt-3.5-turbo for a cheaper but less powerful option
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -611,6 +662,28 @@ Ensure each career has a different match_score and sort by match_score in descen
     except Exception as e:
         st.error(f"Error connecting to OpenAI API: {str(e)}")
         return []
+
+def go_to_next_step():
+    if st.session_state.step == 1 and len(st.session_state.selected_interests) == 3:
+        st.session_state.step = 2
+    elif st.session_state.step == 2 and len(st.session_state.current_skills) == 3 and len(st.session_state.desired_skills) == 3:
+        st.session_state.step = 3
+    elif st.session_state.step == 3 and len(st.session_state.selected_sdgs) > 0:
+        # In this version, we'll call the AI matching function
+        st.session_state.step = 4
+        if st.session_state.api_key_set:
+            with st.spinner("AI is analyzing your profile and finding the best career matches..."):
+                st.session_state.career_matches = get_ai_career_matches()
+        else:
+            st.error("Please enter your OpenAI API key in the sidebar to see AI-powered career matches.")
+
+def restart():
+    st.session_state.step = 1
+    st.session_state.selected_interests = []
+    st.session_state.current_skills = []
+    st.session_state.desired_skills = []
+    st.session_state.selected_sdgs = []
+    st.session_state.career_matches = []
 
 # Sidebar for API key setting
 with st.sidebar:
