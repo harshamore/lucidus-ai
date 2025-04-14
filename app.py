@@ -516,8 +516,14 @@ if 'selected_sdgs' not in st.session_state:
     st.session_state.selected_sdgs = []
 if 'career_matches' not in st.session_state:
     st.session_state.career_matches = []
-if 'api_key_set' not in st.session_state:
-    st.session_state.api_key_set = False
+
+# Load OpenAI API key from secrets
+try:
+    openai_api_key = st.secrets["OPENAI_API_KEY"]
+    has_api_key = True
+except Exception:
+    has_api_key = False
+    st.error("OpenAI API key not found in secrets. Please add it to your Streamlit secrets.toml file.")
 
 # Load data
 careers = load_career_data()
@@ -636,7 +642,7 @@ Ensure each career has a different match_score and sort by match_score in descen
     # Get completion from OpenAI
     try:
         completion = client.chat.completions.create(
-            model="gpt-4-turbo",  # You can use gpt-3.5-turbo for a cheaper but less powerful option
+            model="gpt-4o-mini",  # You can use gpt-3.5-turbo for a cheaper but less powerful option
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -667,11 +673,11 @@ def go_to_next_step():
     elif st.session_state.step == 3 and len(st.session_state.selected_sdgs) > 0:
         # In this version, we'll call the AI matching function
         st.session_state.step = 4
-        if st.session_state.api_key_set:
+        if has_api_key:
             with st.spinner("AI is analyzing your profile and finding the best career matches..."):
                 st.session_state.career_matches = get_ai_career_matches()
         else:
-            st.error("Please enter your OpenAI API key in the sidebar to see AI-powered career matches.")
+            st.error("OpenAI API key not found in secrets. Please add it to your Streamlit secrets.toml file.")
 
 def restart():
     st.session_state.step = 1
@@ -681,24 +687,19 @@ def restart():
     st.session_state.selected_sdgs = []
     st.session_state.career_matches = []
 
-# Sidebar for API key setting
+# Sidebar with info about the app
 with st.sidebar:
     st.title("AI Career Discovery")
     st.write("Use AI to find your ideal career path based on your interests, skills, and values.")
     
-    st.subheader("OpenAI API Settings")
-    openai_api_key = st.text_input("Enter your OpenAI API key", type="password", help="Get your API key from platform.openai.com")
-    
-    if st.button("Save API Key"):
-        if openai_api_key:
-            st.session_state.openai_api_key = openai_api_key
-            st.session_state.api_key_set = True
-            st.success("API key saved!")
-        else:
-            st.error("Please enter an API key.")
-    
     st.markdown("---")
     st.write("This app uses OpenAI's GPT-4 to analyze your profile and suggest careers that match your interests, skills, and values.")
+    
+    st.markdown("### How It Works")
+    st.write("1. Select 3 interests you enjoy")
+    st.write("2. Choose your current skills and skills to develop")
+    st.write("3. Pick the UN SDGs you value most")
+    st.write("4. AI will analyze your profile and recommend careers")
 
 # Header
 st.title("AI Career Discovery")
@@ -943,8 +944,8 @@ elif st.session_state.step == 4:
         st.markdown('<div class="step-container">', unsafe_allow_html=True)
         st.markdown('<h2 class="step-header" style="background-color: #e1f5fe; color: #0277bd;">AI-Powered Career Matches</h2>', unsafe_allow_html=True)
         
-        if not st.session_state.api_key_set:
-            st.warning("Please enter your OpenAI API key in the sidebar to see AI-powered career matches.")
+        if not has_api_key:
+            st.warning("OpenAI API key not found in secrets. Please add it to your Streamlit secrets.toml file.")
             if st.button("Restart", type="primary"):
                 restart()
                 st.rerun()
