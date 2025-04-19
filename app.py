@@ -508,7 +508,7 @@ def get_ai_career_matches():
             "id": career["id"],
             "title": career["title"],
             "description": career["description"],
-            "sdgs": [f"SDG {sdg_id}: {[s['name'] for s in sdgs if s['id'] == sdg_id][0]}" for sdg_id in career["sdgs"]]
+            #"sdgs": [f"SDG {sdg_id}: {[s['name'] for s in sdgs if s['id'] == sdg_id][0]}" for sdg_id in career["sdgs"]]
         }
         career_data.append(career_info)
     
