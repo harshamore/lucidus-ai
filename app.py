@@ -161,198 +161,142 @@ def load_career_data():
         {
             "id": 1,
             "title": "Microfinance Specialist",
-            "description": "Designs small loans and savings programs to support underserved communities.",
-            "interests": ["Economics", "Business Studies / Entrepreneurship", "Global Politics / Civics"],
-            "skills": ["Strategic thinking", "Data analysis", "Helping people", "Understanding cultures"]
+            "description": "Designs small loans and savings programs to support underserved communities."
         },
         {
             "id": 2,
             "title": "Agroecologist",
-            "description": "Applies ecological science to farming for healthier food systems and better soil.",
-            "interests": ["Biology", "Environmental Systems & Societies / Environmental Science", "Agriculture / Sustainable Farming"],
-            "skills": ["Working outdoors", "Problem solving", "Supporting the planet", "Working with animals"]
+            "description": "Applies ecological science to farming for healthier food systems and better soil."
         },
         {
             "id": 3,
             "title": "Biomedical Engineer",
-            "description": "Develops medical devices like prosthetics, diagnostic tools, and wearable tech.",
-            "interests": ["Biology", "Physics", "Engineering (General or Applied)", "Design & Technology / Engineering"],
-            "skills": ["Problem solving", "Building or fixing", "Using tools/machines", "Helping people"]
+            "description": "Develops medical devices like prosthetics, diagnostic tools, and wearable tech."
         },
         {
             "id": 4,
             "title": "Digital Learning Developer",
-            "description": "Creates educational games, apps, and platforms for digital learning.",
-            "interests": ["Computer Science / Programming", "Education", "Design & Technology / Engineering"],
-            "skills": ["Coding", "Designing digitally", "Writing or storytelling", "Explaining ideas"]
+            "description": "Creates educational games, apps, and platforms for digital learning."
         },
         {
             "id": 5,
             "title": "Hydrologist",
-            "description": "Studies the water cycle and helps improve clean water access and conservation.",
-            "interests": ["Environmental Systems & Societies / Environmental Science", "Geography", "Chemistry"],
-            "skills": ["Data analysis", "Working outdoors", "Supporting the planet", "Problem solving"]
+            "description": "Studies the water cycle and helps improve clean water access and conservation."
         },
         {
             "id": 6,
             "title": "Wind Turbine Technician",
-            "description": "Installs and maintains turbines that convert wind into clean electricity.",
-            "interests": ["Physics", "Engineering (General or Applied)", "Environmental Systems & Societies / Environmental Science"],
-            "skills": ["Building or fixing", "Working outdoors", "Using tools/machines", "Supporting the planet"]
+            "description": "Installs and maintains turbines that convert wind into clean electricity."
         },
         {
             "id": 7,
             "title": "Waste Management Engineer",
-            "description": "Designs systems for composting, recycling, and waste reduction.",
-            "interests": ["Environmental Systems & Societies / Environmental Science", "Chemistry", "Engineering (General or Applied)"],
-            "skills": ["Problem solving", "Strategic thinking", "Supporting the planet", "Building or fixing"]
+            "description": "Designs systems for composting, recycling, and waste reduction."
         },
         {
             "id": 8,
             "title": "Circular Economy Analyst",
-            "description": "Redesigns how companies produce and reuse materials to reduce waste.",
-            "interests": ["Business Studies / Entrepreneurship", "Environmental Systems & Societies / Environmental Science", "Economics"],
-            "skills": ["Strategic thinking", "Data analysis", "Supporting the planet", "Standing up for causes"]
+            "description": "Redesigns how companies produce and reuse materials to reduce waste."
         },
         {
             "id": 9,
             "title": "Sustainable Fashion Designer",
-            "description": "Creates trendy clothing using ethical and eco-friendly materials.",
-            "interests": ["Visual Arts (drawing, painting, sculpture)", "Graphic Design / Digital Media", "Product Design / Industrial Design"],
-            "skills": ["Creative thinking", "Drawing or painting", "Supporting the planet", "Designing digitally"]
+            "description": "Creates trendy clothing using ethical and eco-friendly materials."
         },
         {
             "id": 10,
             "title": "Atmospheric Scientist",
-            "description": "Studies weather and climate systems to understand and model change.",
-            "interests": ["Physics", "Geography", "Environmental Systems & Societies / Environmental Science"],
-            "skills": ["Data analysis", "Strategic thinking", "Supporting the planet", "Problem solving"]
+            "description": "Studies weather and climate systems to understand and model change."
         },
         {
             "id": 11,
             "title": "Carbon Accounting Analyst",
-            "description": "Tracks emissions and helps companies reduce their carbon footprint.",
-            "interests": ["Economics", "Environmental Systems & Societies / Environmental Science", "Business Studies / Entrepreneurship"],
-            "skills": ["Data analysis", "Strategic thinking", "Supporting the planet", "Decision-making"]
+            "description": "Tracks emissions and helps companies reduce their carbon footprint."
         },
         {
             "id": 12,
             "title": "Marine Biologist",
-            "description": "Studies ocean ecosystems and works to protect marine biodiversity.",
-            "interests": ["Biology", "Environmental Systems & Societies / Environmental Science", "Geography"],
-            "skills": ["Working outdoors", "Data analysis", "Supporting the planet", "Working with animals"]
+            "description": "Studies ocean ecosystems and works to protect marine biodiversity."
         },
         {
             "id": 13,
             "title": "Urban City Planner",
-            "description": "Designs greener, more connected cities using sustainable planning.",
-            "interests": ["Geography", "Architecture / Interior Design", "Environmental Systems & Societies / Environmental Science"],
-            "skills": ["Strategic thinking", "Designing digitally", "Problem solving", "Supporting the planet"]
+            "description": "Designs greener, more connected cities using sustainable planning."
         },
         {
             "id": 14,
             "title": "Resilience Engineer",
-            "description": "Builds infrastructure that can withstand floods, heatwaves, and climate shocks.",
-            "interests": ["Engineering (General or Applied)", "Physics", "Environmental Systems & Societies / Environmental Science"],
-            "skills": ["Problem solving", "Strategic thinking", "Building or fixing", "Decision-making"]
+            "description": "Builds infrastructure that can withstand floods, heatwaves, and climate shocks."
         },
         {
             "id": 15,
             "title": "Disaster Relief Coordinator",
-            "description": "Coordinates emergency response during disasters, from logistics to shelter.",
-            "interests": ["Global Politics / Civics", "Geography", "Business Studies / Entrepreneurship"],
-            "skills": ["Leading others", "Decision-making", "Helping people", "Resolving conflict"]
+            "description": "Coordinates emergency response during disasters, from logistics to shelter."
         },
         {
             "id": 16,
             "title": "Environmental Data Scientist",
             "description": "Uses data to predict and respond to environmental and climate issues.",
-            "interests": ["Computer Science / Programming", "Mathematics", "Environmental Systems & Societies / Environmental Science"],
-            "skills": ["Coding", "Data analysis", "Strategic thinking", "Supporting the planet"]
         },
         {
             "id": 17,
             "title": "Food Systems Analyst",
-            "description": "Analyzes global food supply chains and suggests improvements for sustainability.",
-            "interests": ["Agriculture / Sustainable Farming", "Business Studies / Entrepreneurship", "Geography"],
-            "skills": ["Data analysis", "Strategic thinking", "Supporting the planet", "Standing up for causes"]
+            "description": "Analyzes global food supply chains and suggests improvements for sustainability."
         },
         {
             "id": 18,
             "title": "Space Systems Engineer",
-            "description": "Designs satellites and space tech used in communication and climate monitoring.",
-            "interests": ["Physics", "Engineering (General or Applied)", "Mathematics"],
-            "skills": ["Problem solving", "Strategic thinking", "Building or fixing", "Decision-making"]
+            "description": "Designs satellites and space tech used in communication and climate monitoring."
         },
         {
             "id": 19,
             "title": "AI Engineer",
-            "description": "Develops intelligent systems that power apps, automation, and innovation.",
-            "interests": ["Computer Science / Programming", "Mathematics", "Philosophy"],
-            "skills": ["Coding", "Problem solving", "Strategic thinking", "Data analysis"]
+            "description": "Develops intelligent systems that power apps, automation, and innovation."
         },
         {
             "id": 20,
             "title": "Doctor",
-            "description": "Diagnoses and treats patients, supporting health and well-being.",
-            "interests": ["Biology", "Chemistry", "Health Science / Pre-Med"],
-            "skills": ["Decision-making", "Helping people", "Listening well", "Problem solving"]
+            "description": "Diagnoses and treats patients, supporting health and well-being."
         },
         {
             "id": 21,
             "title": "Product Manager",
-            "description": "Leads product teams from idea to launch across industries.",
-            "interests": ["Business Studies / Entrepreneurship", "Psychology", "Design & Technology / Engineering"],
-            "skills": ["Leading others", "Strategic thinking", "Decision-making", "Explaining ideas"]
+            "description": "Leads product teams from idea to launch across industries."
         },
         {
             "id": 22,
             "title": "Graphic Designer",
-            "description": "Creates visual content like logos, posters, and digital assets.",
-            "interests": ["Visual Arts (drawing, painting, sculpture)", "Graphic Design / Digital Media", "Design & Technology / Engineering"],
-            "skills": ["Creative thinking", "Drawing or painting", "Designing digitally", "Explaining ideas"]
+            "description": "Creates visual content like logos, posters, and digital assets."
         },
         {
             "id": 23,
             "title": "Journalist",
-            "description": "Reports and writes news stories for TV, social media, or publications.",
-            "interests": ["English Literature / Language Arts", "Global Politics / Civics", "Psychology"],
-            "skills": ["Writing or storytelling", "Listening well", "Explaining ideas", "Standing up for causes"]
+            "description": "Reports and writes news stories for TV, social media, or publications."
         },
         {
             "id": 24,
             "title": "Investment Banker",
-            "description": "Advises companies on financial deals, growth, and capital strategies.",
-            "interests": ["Economics", "Business Studies / Entrepreneurship", "Mathematics"],
-            "skills": ["Strategic thinking", "Data analysis", "Decision-making", "Explaining ideas"]
+            "description": "Advises companies on financial deals, growth, and capital strategies."
         },
         {
             "id": 25,
             "title": "Game Designer",
-            "description": "Builds interactive games for entertainment and education.",
-            "interests": ["Computer Science / Programming", "Visual Arts (drawing, painting, sculpture)", "Psychology"],
-            "skills": ["Creative thinking", "Coding", "Designing digitally", "Writing or storytelling"]
+            "description": "Builds interactive games for entertainment and education."
         },
         {
             "id": 26,
             "title": "Biotech Researcher",
-            "description": "Develops breakthroughs like vaccines, clean meat, or gene therapy.",
-            "interests": ["Biology", "Chemistry", "Health Science / Pre-Med"],
-            "skills": ["Problem solving", "Data analysis", "Supporting the planet", "Helping people"]
+            "description": "Develops breakthroughs like vaccines, clean meat, or gene therapy."
         },
         {
             "id": 27,
             "title": "Neuroscientist",
-            "description": "Studies the human brain to understand memory, emotions, and health.",
-            "interests": ["Biology", "Psychology", "Health Science / Pre-Med"],
-            "skills": ["Data analysis", "Problem solving", "Helping people", "Decision-making"]
+            "description": "Studies the human brain to understand memory, emotions, and health."
         },
         {
             "id": 28,
             "title": "UX Designer",
-            "description": "Designs interfaces that make tech easy, ethical, and human-centered.",
-            "interests": ["Psychology", "Graphic Design / Digital Media", "Computer Science / Programming"],
-            "skills": ["Creative thinking", "Designing digitally", "Listening well", "Problem solving"]
+            "description": "Designs interfaces that make tech easy, ethical, and human-centered."
         }
     ]
     return careers
@@ -575,7 +519,7 @@ def get_ai_career_matches():
 
 You'll be given:
 1. A student's interests, current skills, desired skills, and values (UN SDGs they care about)
-2. A list of potential careers with descriptions and associated SDGs
+2. A list of potential careers with description
 
 Your task is to:
 1. Analyze the student's profile
@@ -588,7 +532,6 @@ For each career match, include:
 - Key interests, skills, and SDGs that align with this career
 - A "match_score" between 1-100 indicating how good the match is (highest score first)
 
-Focus on finding careers that match the student's values (SDGs) first, then look for interest and skill alignment.
 """
 
     user_prompt = f"""
