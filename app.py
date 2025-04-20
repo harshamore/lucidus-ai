@@ -696,7 +696,16 @@ with st.sidebar:
     st.write("2. Choose your current skills and skills to develop")
     st.write("3. Pick the UN SDGs you value most")
     st.write("4. AI will analyze your profile and recommend careers")
-    st.write("5. Click on any career to see educational pathways")
+    st.write("5. Click 'View Educational Pathway' to see detailed information for any career")
+    
+    # Add note about custom buttons if we're on the results page
+    if st.session_state.step == 4 and not st.session_state.selected_career_for_details:
+        st.markdown("---")
+        st.info("""
+        ℹ️ **Tip:** On the results page, look for the '✨ View Educational Pathway' 
+        buttons to see detailed information about each career path.
+        """)
+
 
 # Header
 st.title("AI Career Discovery")
@@ -987,18 +996,27 @@ elif st.session_state.step == 4:
                     
                     st.markdown("## 🏆 Top Career Match")
                     
-                    # Create the main card first with just the basic info
-                    st.markdown(f"""
-                    <div class="career-card top-match" onclick="console.log('clicked');">
-                        <div class="career-header">
-                            <h3 style="margin: 0;">{top_match['title']} <span style="float:right; font-size:0.9rem;">Match Score: {top_match['match_score']}%</span></h3>
+                    # Create a clickable container for the top match
+                    top_match_col1, top_match_col2 = st.columns([3, 1])
+                    
+                    with top_match_col1:
+                        st.markdown(f"""
+                        <div class="career-card top-match">
+                            <div class="career-header">
+                                <h3 style="margin: 0;">{top_match['title']} <span style="float:right; font-size:0.9rem;">Match Score: {top_match['match_score']}%</span></h3>
+                            </div>
+                            <div class="career-content">
+                                <p>{top_match['description']}</p>
+                                <p><strong>Why this fits you:</strong> {top_match['explanation']}</p>
+                            </div>
                         </div>
-                        <div class="career-content">
-                            <p>{top_match['description']}</p>
-                            <p><strong>Why this fits you:</strong> {top_match['explanation']}</p>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+                        """, unsafe_allow_html=True)
+                    
+                    with top_match_col2:
+                        st.markdown("<br>", unsafe_allow_html=True)  # Add some spacing
+                        if st.button("View Educational Pathway", key=f"view_top_{top_match['id']}", type="primary", use_container_width=True):
+                            set_selected_career(top_match['title'])
+                            st.rerun()
                     
                     # Display matching interests separately
                     st.markdown("<strong style='color: #1565c0;'>Matching Interests:</strong>", unsafe_allow_html=True)
@@ -1066,9 +1084,20 @@ elif st.session_state.step == 4:
                                         <div style="padding: 0.7rem;">
                                             <p style="font-size: 0.9rem;">{career['description']}</p>
                                             <p style="font-size: 0.9rem;"><strong>Why this fits you:</strong> {career['explanation']}</p>
+                                            <div style="margin-top: 15px;">
+                                                <button class="stButton" style="background-color: #1976d2; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold;" onclick="Streamlit.setComponentValue('{career['title']}');">
+                                                    ✨ View Educational Pathway
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     """, unsafe_allow_html=True)
+                                    
+                                    # Hidden button that gets triggered by the custom HTML button
+                                    button_key = f"view_{career['id']}"
+                                    if st.button("View", key=button_key, type="primary", use_container_width=True, label_visibility="collapsed"):
+                                        set_selected_career(career['title'])
+                                        st.rerun()
                                     
                                     # Display interests
                                     st.markdown("<strong style='color: #1565c0; font-size: 0.8rem;'>Matching Interests:</strong>", unsafe_allow_html=True)
@@ -1093,10 +1122,7 @@ elif st.session_state.step == 4:
                                         sdgs_html += f'<span style="background-color: #ede7f6; color: #5e35b1; border-radius: 1rem; padding: 0.2rem 0.6rem; margin-right: 0.3rem; margin-bottom: 0.3rem; display: inline-block; font-size: 0.8rem;">{sdg_text}</span>'
                                     st.markdown(f"<div>{sdgs_html}</div>", unsafe_allow_html=True)
                                     
-                                    # Add the "View Educational Pathway" button
-                                    if st.button("View Educational Pathway", key=f"view_{career['id']}", type="primary", use_container_width=True):
-                                        set_selected_career(career['title'])
-                                        st.rerun()
+                                    # This code is now handled above in the HTML button implementation
                 else:
                     st.error("No career matches were found. Please try again with different selections.")
                 
